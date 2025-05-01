@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 import jwt, datetime
+from flask_cors import CORS
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
