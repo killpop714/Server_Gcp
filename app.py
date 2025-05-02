@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite://messages.db'
+app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///messages.db'
 db = SQLAlchemy(app)
 app.config['SECRET_KEY'] = 'your-secret-key'
 
