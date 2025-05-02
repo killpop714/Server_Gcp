@@ -4,40 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        #inputWrapper{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 0;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+        }
+        #inputarea{
+           display: flex;
+           align-items: center;
+            width: 100%;
+            max-width: 600px;
+            padding:  0 10px;
+        }
+        #messageInput{
+            z-index: 0;
+            flex: 1;
+            resize: none;
+            width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16.4px;
+            height: 60px;
+        }
+        #messageButton{
+            z-index: 2;
+            padding: 0 20px;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #messageList{
+            flex: 1;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 20px;
+            overflow-y: auto;
+            background:  #fff;
+            border-top: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
     <h2>메세지 테스트</h2>
-
-                   <textarea id='messageInput'></textarea>
-                   <button onclick='sendMessage()'>보내기</button>
-                   <div id='messageList'></div>
-                   <script>
-                       async function sendMessage() {
-                           const msg = document.getElementById('messageInput').value;
-                           await fetch('/post_message', {
-                               method: 'POST',
-                               headers: {'Content-Type': 'application/json'},
-                               body: JSON.stringify({username: '익명', text: msg}),
+    <div id='messageList'></div>
+    <div id="inputWrapper">
+        <div id='inputarea'>
+            <textarea id='messageInput' placeholder="메세지를 입력하세요..."></textarea>
+        <button id="messageButton" onclick='sendMessage()'>∧</button>
+        </div>
+    </div>
+    
+    
+    <script>
+        async function sendMessage() {
+            const msg = document.getElementById('messageInput').value;
+            await fetch('/post_message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: '익명', text: msg}),
                             
-                           });
-                           loadMessages();
-                           document.getElementById('messageInput').value =""
-                       }
+            });
+            loadMessages();
+            document.getElementById('messageInput').value =""
+        }
       
-                       async function loadMessages() {
-                           const res = await fetch('/get_messages');
-                           const data = await res.json();
-                           const box = document.getElementById('messageList');
-                           box.innerHTML = '';
-                           data.forEach(item => {
-                               const p = document.createElement('p');
-                               p.textContent = `[${item.username}] ${item.text}`;
-                               box.appendChild(p);
-                           });
-                       }
+        async function loadMessages() {
+            const res = await fetch('/get_messages');
+            const data = await res.json();
+            const box = document.getElementById('messageList');
+            box.innerHTML = '';
+            data.forEach(item => {
+                const p = document.createElement('p');
+                p.textContent = `[${item.username}] ${item.text}`;
+                box.appendChild(p);
+            });
+        }
       
-                       setInterval(loadMessages, 2000)
-                       loadMessages();
-                   </script>
+        setInterval(loadMessages, 2000)
+        loadMessages();
+    </script>
 </body>
 </html>

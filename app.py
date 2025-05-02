@@ -46,7 +46,7 @@ def	get_messages():
 
 @app.route('/')
 def home():
-	return render_template("test.html")
+	return render_template("page.html")
 
 if __name__ == "__main__":
 	app.run("0.0.0.0",port=5000)

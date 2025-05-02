@@ -322,6 +322,56 @@
             align-items: center;
         }
        
+        /*채팅 메신저 CSS*/
+        #inputWrapper{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 0;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+        }
+        #inputarea{
+           display: flex;
+           align-items: center;
+            width: 100%;
+            max-width: 600px;
+            padding:  0 10px;
+        }
+        #messageInput{
+            z-index: 0;
+            flex: 1;
+            resize: none;
+            width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16.4px;
+            height: 60px;
+        }
+        #messageButton{
+            z-index: 2;
+            padding: 0 20px;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #messageList{
+            flex: 1;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 20px;
+            overflow-y: auto;
+            background:  #fff;
+            border-top: 1px solid #ddd;
+        }
         
     </style>
 </head>
@@ -430,12 +480,33 @@
             })
         }
 
+
+
         //static 경로에 로드
+
+        let interval =null
         function sideload(index){
             fetch('/static/data.json')
         .then(res => res.json())
         .then(data=>{
             document.getElementById("container").innerHTML = data[index].skript
+            if(index==3){
+                if(!interval){
+                    interval = setInterval(loadMessages, 2000)
+                    loadMessages();
+                    console.log("work sibal")
+                }
+                else{
+                    console.log("interval이 이미있습니다")
+                }
+            }
+            else{
+                if(interval){
+                    console.log("작동중지 시발아")
+                    clearInterval(interval)
+                    interval = null
+                }
+            }
         })
         .catch(e=>{
             console.log("fetch 실패:"+e)
@@ -480,6 +551,31 @@
  		
         }
     });
+
+    //메세지 전달 기능
+    async function sendMessage() {
+            const msg = document.getElementById('messageInput').value;
+            await fetch('/post_message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: '익명', text: msg}),
+                            
+            });
+            loadMessages();
+            document.getElementById('messageInput').value =""
+        }
+      
+        async function loadMessages() {
+            const res = await fetch('/get_messages');
+            const data = await res.json();
+            const box = document.getElementById('messageList');
+            box.innerHTML = '';
+            data.forEach(item => {
+                const p = document.createElement('p');
+                p.textContent = `[${item.username}] ${item.text}`;
+                box.appendChild(p);
+            });
+        }
    </script>
 
 </body>
