@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>메세지 테스트</h2>
+
+                   <textarea id='messageInput'></textarea>
+                   <button onclick='sendMessage()'>보내기</button>
+                   <div id='messageList'></div>
+                   <script>
+                       async function sendMessage() {
+                           const msg = document.getElementById('messageInput').value;
+                           await fetch('/post_message', {
+                               method: 'POST',
+                               headers: {'Content-Type': 'application/json'},
+                               body: JSON.stringify({username: '익명', text: msg}),
+                            
+                           });
+                           loadMessages();
+                           document.getElementById('messageInput').value =""
+                       }
+      
+                       async function loadMessages() {
+                           const res = await fetch('/get_messages');
+                           const data = await res.json();
+                           const box = document.getElementById('messageList');
+                           box.innerHTML = '';
+                           data.forEach(item => {
+                               const p = document.createElement('p');
+                               p.textContent = `[${item.username}] ${item.text}`;
+                               box.appendChild(p);
+                           });
+                       }
+      
+                       loadMessages();
+                   </script>
+</body>
+</html>
