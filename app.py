@@ -50,7 +50,7 @@ def localact():
 	act_number = data.get('act_number')
 	print(act_number)
 
-	if not user_id or not act:
+	if not user_id or not act_number:
 		return jsonify(success=False,error="user_id 또는 act 누락"),400
 	
 	user_data.setdefault(user_id,{})[act_number] = True
