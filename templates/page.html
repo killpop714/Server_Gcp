@@ -105,6 +105,13 @@
 
         }
 
+        .left-nav{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+
         
         .closebtn{
             display: flex;
@@ -278,7 +285,7 @@
             }    
         }
 
-        /*스템프*/
+        /*인증CSS*/
 
         .check{
             display: flex;
@@ -377,10 +384,11 @@
 </head>
 <body>
     <nav class="navbar" id="navbar">
-        <button class="openbtn" id="btn1" onclick="Openside()">
+        <div class="left-nav"><button class="openbtn" id="btn1" onclick="Openside()">
             <img src="static/icon.jpg" alt="none">
         </button>
         <img class="logo" src="static/icon.jpg" alt="로고">
+        </div>
         <span>My web</span>
 	<a href="https://www.instagram.com/" class="share">공유하기</a>
    </nav>
@@ -405,18 +413,18 @@
         </ul>
 
         <ul>
-            <p class="ulist">전공 학생</p>
-            <li><a oncl>이정혁</a></li>
-            <li><a href="#">김상준</a></li>
-            <li><a href="#">유재석</a></li>
-            <li><a href="#">이정혁</a></li>
+            <p class="ulist">팀</p>
+            <li><a oncl>피드백</a></li>
 
         </ul>
    </div>
 
    <div class="passpop" id="viewpass">
         <input type="number" class="localpassword" id="localpassword">
-        <button onclick="localact()">인증</button>
+        <div class="left-nav">
+            <button onclick="localact()">인증</button>
+        <button onclick="closePassword()">취소</button>
+        </div>
    </div>
 
    <div class="container" id ="container">
@@ -458,7 +466,7 @@
         }
         
         function localact(){
-            fetch('/localact',{
+            fetch('/localact_qr',{
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({
@@ -470,7 +478,7 @@
             .then(res => res.json())
             .then(data=>{
                 if(data.success)
-                    document.getElementById("stamp").innerText = `스탬프 ${data.stamps} 개`
+                    console.log("성공 대슈와")
                 else{
                     alert("비밀번호가 틀렸다")
                 }
@@ -491,22 +499,14 @@
         .then(data=>{
             document.getElementById("container").innerHTML = data[index].skript
             if(index==3){
-                if(!interval){
-                    interval = setInterval(loadMessages, 2000)
-                    loadMessages();
-                    console.log("work sibal")
-                }
-                else{
-                    console.log("interval이 이미있습니다")
-                }
+                loadMessages();
+                console.log("메세지 작동")
+                
             }
             else{
-                if(interval){
-                    console.log("작동중지 시발아")
-                    clearInterval(interval)
-                    interval = null
-                }
+                console.log("걍 아무것도 아님")
             }
+            
         })
         .catch(e=>{
             console.log("fetch 실패:"+e)
@@ -542,15 +542,18 @@
         //체크 클릭 이벤트
         document.addEventListener("click", (e) => {
         if (e.target.classList.contains("check")) {
-            console.log("작동중");
             document.getElementById("viewpass").classList.toggle("show");
 	    const items = Array.from(document.querySelectorAll(".check"))
-	    let index = items.indexOf(e.target)
-	    console.log(index)
-	    act_number = index
+	    act_number = items.indexOf(e.target)
+	    console.log(act_number)
+	    
  		
         }
     });
+    //체크 닫기 기능
+    function closePassword(){
+        document.getElementById("viewpass").classList.remove("show");
+    }
 
     //메세지 전달 기능
     async function sendMessage() {
