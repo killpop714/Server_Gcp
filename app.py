@@ -57,7 +57,7 @@ def localact():
 	return jsonify(success=True)
 
 #qr 인증 확인
-@app.route('check_status')
+@app.route('/check_status')
 def check():
 	user_id = request.args.get("user_id")
 	act = request.args.get("act")
