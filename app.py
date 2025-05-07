@@ -30,7 +30,7 @@ def login():
         return jsonify(token=token)
     return jsonify(error="비밀번호 틀림"), 403
 
-#시발롬
+#로컬 인증
 @app.route('/localact', methods=['POST'])
 def localact():
 	auth_header = request.headers.get("Authorization","")
@@ -46,9 +46,7 @@ def localact():
 
 	data = request.get_json()
 	user_id = data.get('user_id')
-	print(user_id)
 	act = data.get('act')
-	print(act)
 
 	if not user_id or not act:
 		return jsonify(success=False,error="user_id 또는 act 누락"),400
@@ -58,20 +56,33 @@ def localact():
 
 	return jsonify(success=True)
 
+#qr 인증 확인
+@app.route('check_status')
+def check():
+	user_id = request.args.get("user_id")
+	act = request.args.get("act")
+	if user_id in user_data and user_data[user_id].get(act):
+		return jsonify(success=True)
+	return jsonify(success=False)
+
+#메세지 요청
 @app.route('/post_message', methods=['POST'])
 def post_message():
 	data = request.get_json()
 	messages.append({'username':data.get('username'),'text':data.get('text')})
 	return jsonify({'status': 'ok'})
 
+#메세지 전송
 @app.route('/get_messages')
 def	get_messages():
 	return jsonify(messages)
 
+#인증용 사이트
 @app.route('/verify')
 def verify():
 	return render_template("verify.html")
 
+#기본 사이트
 @app.route('/')
 def home():
 	return render_template("page.html")
