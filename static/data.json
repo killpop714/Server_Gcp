@@ -2,6 +2,6 @@
     {"skript":"<h2>소개</h2><p>환영합니다, 이곳은 융합콘텐츠 기획 전공 전시회 사이트입니다.</p><p>다큐 영상 확인과 미션을 성공하시면 저희팀이 준비한 굿즈를 제공합니다, 열심히 참여해보세요!!!</p>"},
     {"skript":"<h2>다큐</h2><img class='tumbain' src='static/some.png' alt='영상 썸네일' onclick='openModal()'><div class='modal' id='viewModal'><div class='modal_content'><span class='close' onclick='closeModal()'>x</span><video class='video' id='video' controls poster='static/vid.mp4'><source src='static/vid.mp4' type='video/mp4'></video></div></div>"},
     {"skript":"<h2>인증</h2><ul><li class='check_li'><img src='static/Check.jpg' class='check'><p>제목</p></li><li class='check_li'><img src='static/Check.jpg' class='check'><p>제목</p></li><li class='check_li'><img src='static/Check.jpg' class='check'><p>제목</p></li><li class='check_li'><img src='static/Check.jpg' class='check'><p>제목</p></li><li class='check_li'><img src='static/Check.jpg' class='check'><p>제목</p></li></ul>"},
-    {"skript":"<h2>메세지 테스트</h2><div id='messageList'></div><div id='inputWrapper'><div id='inputarea'><textarea id='messageInput' placeholder='메세지를 입력하세요...'></textarea><button id='messageButton' onclick='sendMessage()'>∧</button></div></div>"}
-
+    {"skript":"<h2>메세지 테스트</h2><div id='messageList'></div><div id='inputWrapper'><div id='inputarea'><textarea id='messageInput' placeholder='메세지를 입력하세요...'></textarea><button id='messageButton' onclick='sendMessage()'>∧</button></div></div>"},
+    {"skript":"<input id='pw' type='password'><button onclick='login()'>로그인</button>"}
 ]

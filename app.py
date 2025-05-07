@@ -66,6 +66,10 @@ def post_message():
 def	get_messages():
 	return jsonify(messages)
 
+@app.route('/verify')
+def verify():
+	return render_template("verify.html")
+
 @app.route('/')
 def home():
 	return render_template("page.html")

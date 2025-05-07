@@ -415,7 +415,11 @@
         <ul>
             <p class="ulist">팀</p>
             <li><a oncl>피드백</a></li>
+        </ul>
 
+        <ul>
+            <p class="ulist">관리</p>
+            <li><a oncl>로그인</a></li>
         </ul>
    </div>
 
@@ -464,28 +468,28 @@
             localStorage.setItem("user_id",uuid)
         }
         
-        function localact(){
-            fetch('/localact',{
-            method: "POST",
-            headers: {"Content-Type":"application/json"},
-            body: JSON.stringify({
-                user_id:localStorage.getItem("user_id"),
-                act:act[act_number],
-                password:document.getElementById("localpassword").value
-            })
-            })
-            .then(res => res.json())
-            .then(data=>{
-                if(data.success)
-                    console.log("성공 대슈와")
-                else{
-                    alert("비밀번호가 틀렸다")
-                }
-            })
-            .catch(e=>{
-                console.log("fetch 실패:"+e)
-            })
-        }
+        // function localact(){
+        //     fetch('/localact',{
+        //     method: "POST",
+        //     headers: {"Content-Type":"application/json"},
+        //     body: JSON.stringify({
+        //         user_id:localStorage.getItem("user_id"),
+        //         act:act[act_number],
+        //         password:document.getElementById("localpassword").value
+        //     })
+        //     })
+        //     .then(res => res.json())
+        //     .then(data=>{
+        //         if(data.success)
+        //             console.log("성공 대슈와")
+        //         else{
+        //             alert("비밀번호가 틀렸다")
+        //         }
+        //     })
+        //     .catch(e=>{
+        //         console.log("fetch 실패:"+e)
+        //     })
+        // }
 
 
 
@@ -595,5 +599,23 @@
         }
    </script>
 
+<script>
+    function login() {
+        if(!localStorage.getItem("jwt")){
+            fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: document.getElementById("pw").value })
+            })
+            .then(r => r.json())
+            .then(r => {
+            if (r.token) localStorage.setItem("jwt", r.token);
+            });
+        }
+        else{
+            console.log("이미 토큰이 있는 것을 확인하였습니다")
+        }
+    }
+    </script>
 </body>
 </html>
