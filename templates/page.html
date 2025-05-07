@@ -437,6 +437,7 @@
         const $btn = document.getElementById("btn1")
         const container = document.querySelector(".container")
 
+        let baseURL = window.location.origin;
 
         let act_number =0 
 
@@ -549,7 +550,7 @@
         document.getElementById("qrcode").innerHTML =""
         const user_id = localStorage.getItem("user_id") || "unknown"
         console.log(user_id)
-        const qrData = JSON.stringify({ user_id : user_id, index : act_number})
+        const qrData = `${baseURL}/verify?user_id=${encodeURIComponent(user_id)}&index=${act_number}}`
 
         new QRCode(document.getElementById("qrcode"), {
         text: qrData,
