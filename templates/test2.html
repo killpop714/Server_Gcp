@@ -1,34 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <title>QR 코드 생성기</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
+  <h2>QR 코드 생성기</h2>
+  <label>유저 ID: <input type="text" id="user_id" value="abc123"></label><br/>
+  <label>행동 (act): <input type="text" id="act" value="Draw"></label><br/>
+  <label>코드: <input type="text" id="code" value="1111"></label><br/>
+  <button onclick="generateQR()">QR 생성</button>
 
-    <div id="reader" style="width: 300px;"></div>
+  <div id="qrcode" style="margin-top: 20px;"></div>
 
-    <script src="https://unpkg.com/html5-qrcode"></script>
-<script>
-    
-function onScanSuccess(decodedText, decodedResult) {
-  console.log("QR 코드 내용:", decodedText);
-  // 예: "https://yourdomain.com/localact_qr?act=Draw&code=1234&user_id=abc"
-  fetch(decodedText)
-    .then(res => res.text())
-    .then(data => {
-      alert("✅ 인증 완료됨!");
-      console.log("서버 응답:", data);
-    });
-}
+  <script>
+    function generateQR() {
+      const user_id = document.getElementById('user_id').value;
+      const act = document.getElementById('act').value;
+      const code = document.getElementById('code').value;
 
-const qrScanner = new Html5Qrcode("reader");
-qrScanner.start(
-  { facingMode: "environment" }, // 후면 카메라
-  { fps: 10, qrbox: 250 },
-  onScanSuccess
-);
-</script>
+      const data = JSON.stringify({ user_id, act, code });
+
+      const qrDiv = document.getElementById("qrcode");
+      qrDiv.innerHTML = ""; // 기존 QR 제거
+
+      new QRCode(qrDiv, {
+        text: data,
+        width: 256,
+        height: 256
+      });
+    }
+  </script>
 </body>
 </html>

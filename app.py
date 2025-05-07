@@ -20,7 +20,7 @@ messages=[]
 
 
 @app.route('/localact_qr', methods=['POST'])
-def localact():
+def localact_qr():
 	print(request.method)
 	data = request.get_json()
 	user_id = data.get('user_id')
@@ -46,7 +46,7 @@ def	get_messages():
 
 @app.route('/')
 def home():
-	return render_template("test2.html")
+	return render_template("test3.html")
 
 if __name__ == "__main__":
 	app.run("0.0.0.0",port=5000)
