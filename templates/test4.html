@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>QR 스캐너</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>운영자 QR 스캐너</h2>
+  <div id="reader" style="width:300px;"></div>
+
+  <script>
+    function onScanSuccess(decodedText) {
+      console.log("스캔된 QR 데이터:", decodedText);
+
+      // QR 안에 JSON이 들어있다고 가정
+      try {
+        const data = JSON.parse(decodedText);  // QR이 { user_id, act } 형태
+        const token = localStorage.getItem("jwt");  // 운영자 로그인 토큰
+
+        if (!token) {
+          alert("운영자 인증이 필요합니다.");
+          return;
+        }
+
+        // 서버로 인증 POST
+        fetch("/localact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+          },
+          body: JSON.stringify(data)
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.success) {
+            alert("✅ 인증 성공!");
+          } else {
+            alert("❌ 인증 실패: " + (res.error || "알 수 없음"));
+          }
+        })
+        .catch(err => {
+          alert("❌ 서버 오류");
+          console.error(err);
+        });
+      } catch (e) {
+        alert("QR 데이터가 JSON 형식이 아님!");
+      }
+    }
+
+    // 카메라 시작
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        const qrScanner = new Html5Qrcode("reader");
+        qrScanner.start(
+          cameras[0].id,
+          { fps: 10, qrbox: 250 },
+          onScanSuccess
+        );
+      } else {
+        alert("카메라 없음");
+      }
+    });
+  </script>
+</body>
+</html>

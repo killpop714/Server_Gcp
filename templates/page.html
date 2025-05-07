@@ -429,7 +429,7 @@
      <div class="line"></div>
    </div>
 
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
    <script>
         const $side = document.getElementById("sidebar");
         const $navbar =document.getElementById("navbar");
@@ -437,7 +437,7 @@
         const $btn = document.getElementById("btn1")
         const container = document.querySelector(".container")
 
-	const act = ["Draw","Chat","See"]
+
         let act_number =0 
 
         //사이드용 함수
@@ -546,13 +546,25 @@
 	    console.log(act_number)
 
 
+        document.getElementById("qrcode").innerHTML =""
+        const user_id = localStorage.getItem("user_id") || "unknown"
+        console.log(user_id)
+        const qrData = JSON.stringify({ user_id : user_id, index : act_number})
+
+        new QRCode(document.getElementById("qrcode"), {
+        text: qrData,
+        width: 256,
+        height: 256
+      });
+
+
         
 	    
  		
         }
     });
     //체크 닫기 기능
-    function closePassword(){
+    function closeQr(){
         document.getElementById("viewpass").classList.remove("show");
     }
 

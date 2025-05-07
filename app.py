@@ -19,6 +19,7 @@ allowd_token= set()
 
 messages=[]
 
+#운영자용 로그인
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -29,7 +30,7 @@ def login():
         return jsonify(token=token)
     return jsonify(error="비밀번호 틀림"), 403
 
-
+#시발롬
 @app.route('/localact', methods=['POST'])
 def localact():
 	auth_header = request.headers.get("Authorization","")
@@ -67,7 +68,7 @@ def	get_messages():
 
 @app.route('/')
 def home():
-	return render_template("page.html")
+	return render_template("test4.html")
 
 if __name__ == "__main__":
 	app.run("0.0.0.0",port=5000)
