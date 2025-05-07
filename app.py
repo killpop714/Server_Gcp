@@ -47,7 +47,7 @@ def localact():
 	data = request.get_json()
 	user_id = data.get('user_id')
 	print(user_id)
-	act = data.get('index')
+	act = data.get('act')
 	print(act)
 
 	if not user_id or not act:
