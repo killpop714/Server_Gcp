@@ -1,61 +1,45 @@
-<!-- scan_qr.html -->
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>운영자 QR 스캐너</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
-  <h2>📷 운영자 QR 스캐너</h2>
-  <div id="reader" style="width: 300px;"></div>
-
-  <script>
-    function onScanSuccess(decodedText) {
-      console.log("QR 내용:", decodedText);
-      try {
-        const data = JSON.parse(decodedText); // QR이 JSON일 것이라 가정
-
-        fetch('http://localhost:5000/localact_qr', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(data)
+    <input id="pw" type="password"><button onclick="login()">로그인</button>
+<script>
+function login() {
+    if(!localStorage.getItem("jwt")){
+        fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: document.getElementById("pw").value })
         })
-        .then(res => res.json())
-        .then(result => {
-          if (result.success) {
-            alert("✅ 인증 성공!");
-          } else {
-            alert("❌ 인증 실패: " + (result.error || "알 수 없음"));
-          }
-        })
-        .catch(err => {
-          console.error("서버 오류:", err);
-          alert("❌ 서버 연결 실패");
+        .then(r => r.json())
+        .then(r => {
+        if (r.token) localStorage.setItem("jwt", r.token);
         });
-      } catch (e) {
-        alert("⚠️ QR 코드가 JSON 형식이 아님");
-      }
     }
-
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length) {
-        const cameraId = cameras[0].id;
-        const qrScanner = new Html5Qrcode("reader");
-        qrScanner.start(
-          cameraId,
-          { fps: 10, qrbox: 250 },
-          onScanSuccess
-        );
-      } else {
-        alert("카메라를 찾을 수 없습니다");
-      }
-    }).catch(err => {
-      alert("카메라 접근 오류: " + err);
-    });
-  </script>
+    else{
+        console.log("이미 토큰이 있는 것을 확인하였습니다")
+        localStorage.removeItem("jwt");
+    }
+}
+</script>
+<script>
+    const q = new URLSearchParams(location.search);
+    const token = localStorage.getItem("jwt");
+    
+    if (token)
+      fetch("/localact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ user_id: q.get("user_id"), act: q.get("act") })
+      });
+    else alert("❌ 운영자 인증이 필요합니다.");
+    </script>
 </body>
 </html>

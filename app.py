@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+import jwt
+
 
 
 app = Flask(__name__)
@@ -9,6 +11,8 @@ app.config['SECRET_KEY'] = 'your-secret-key'
 
 user_data = {}
 
+SECRET_KEY="apx10_124_714"
+allowd_token= set()
 
 actsuccess ={
 	"Draw":"1111",
@@ -18,10 +22,22 @@ actsuccess ={
 
 messages=[]
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    password = data.get("password")
 
-@app.route('/localact_qr', methods=['POST'])
-def localact_qr():
-	print(request.method)
+    if password == "admin1234":  # 운영자 비밀번호
+        token = jwt.encode({"role": "admin"},SECRET_KEY,algorithm="HS256")
+        return jsonify(token=token)
+    return jsonify(error="비밀번호 틀림"), 403
+
+
+@app.route('/localact', methods=['POST'])
+def localact():
+
+
+
 	data = request.get_json()
 	user_id = data.get('user_id')
 	act = data.get('act')
