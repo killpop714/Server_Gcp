@@ -46,13 +46,15 @@ def localact():
 
 	data = request.get_json()
 	user_id = data.get('user_id')
-	act = data.get('act')
+	print(user_id)
+	act_number = data.get('act_number')
+	print(act_number)
 
 	if not user_id or not act:
 		return jsonify(success=False,error="user_id 또는 act 누락"),400
 	
-	user_data.setdefault(user_id,{})[act] = True
-	user_data[user_id][act] =True
+	user_data.setdefault(user_id,{})[act_number] = True
+	user_data[user_id][act_number] =True
 
 	return jsonify(success=True)
 
