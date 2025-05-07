@@ -9,7 +9,6 @@
   <h2>QR 코드 생성기</h2>
   <label>유저 ID: <input type="text" id="user_id" value="abc123"></label><br/>
   <label>행동 (act): <input type="text" id="act" value="Draw"></label><br/>
-  <label>코드: <input type="text" id="code" value="1111"></label><br/>
   <button onclick="generateQR()">QR 생성</button>
 
   <div id="qrcode" style="margin-top: 20px;"></div>
@@ -18,7 +17,6 @@
     function generateQR() {
       const user_id = document.getElementById('user_id').value;
       const act = document.getElementById('act').value;
-      const code = document.getElementById('code').value;
 
       const data = JSON.stringify({ user_id, act, code });
 

@@ -420,11 +420,8 @@
    </div>
 
    <div class="passpop" id="viewpass">
-        <input type="number" class="localpassword" id="localpassword">
-        <div class="left-nav">
-            <button onclick="localact()">인증</button>
-        <button onclick="closePassword()">취소</button>
-        </div>
+        <div id="qrcode"></div>
+        <button onclick="closeQr()">닫기</button>
    </div>
 
    <div class="container" id ="container">
@@ -432,6 +429,7 @@
      <div class="line"></div>
    </div>
 
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
    <script>
         const $side = document.getElementById("sidebar");
         const $navbar =document.getElementById("navbar");
@@ -546,6 +544,9 @@
 	    const items = Array.from(document.querySelectorAll(".check"))
 	    act_number = items.indexOf(e.target)
 	    console.log(act_number)
+
+
+        
 	    
  		
         }

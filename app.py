@@ -12,13 +12,10 @@ app.config['SECRET_KEY'] = 'your-secret-key'
 user_data = {}
 
 SECRET_KEY="apx10_124_714"
+
 allowd_token= set()
 
-actsuccess ={
-	"Draw":"1111",
-	"Chat":"1234",
-	"See":"123"
-}
+
 
 messages=[]
 
@@ -35,17 +32,25 @@ def login():
 
 @app.route('/localact', methods=['POST'])
 def localact():
+	auth_header = request.headers.get("Authorization","")
+	token = auth_header.replace("Bearer ","")
 
+	try:
+		decoded = jwt.decode(token,SECRET_KEY,algorithms=["HS256"])
+		if decoded.get("role") != "admin":
+			return jsonify(success=False,error="권한 없음"),403
+	except Exception as e:
+		return jsonify(success=False,error="토큰 인증 실패"),403
 
 
 	data = request.get_json()
 	user_id = data.get('user_id')
 	act = data.get('act')
-	password = data.get('code')
-	if actsuccess.get(act) != password:
-		return jsonify(success=False)
+
+	if not user_id or not act:
+		return jsonify(success=False,error="user_id 또는 act 누락"),400
 	
-	user_data.setdefault(user_id,{})
+	user_data.setdefault(user_id,{})[act] = True
 	user_data[user_id][act] =True
 
 	return jsonify(success=True)
@@ -62,7 +67,7 @@ def	get_messages():
 
 @app.route('/')
 def home():
-	return render_template("test3.html")
+	return render_template("page.html")
 
 if __name__ == "__main__":
 	app.run("0.0.0.0",port=5000)
