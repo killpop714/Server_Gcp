@@ -1,3 +1,4 @@
+<!-- scan_qr.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,16 +8,16 @@
   <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
-  <h2>📷 운영자 전용 QR 스캐너</h2>
+  <h2>📷 운영자 QR 스캐너</h2>
   <div id="reader" style="width: 300px;"></div>
 
   <script>
     function onScanSuccess(decodedText) {
-      console.log("스캔된 QR 데이터:", decodedText);
+      console.log("QR 내용:", decodedText);
       try {
         const data = JSON.parse(decodedText); // QR이 JSON일 것이라 가정
 
-        fetch('/localact_qr', {
+        fetch('http://localhost:5000/localact_qr', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -36,7 +37,7 @@
           alert("❌ 서버 연결 실패");
         });
       } catch (e) {
-        alert("⚠️ QR 코드가 JSON 형식이 아닙니다");
+        alert("⚠️ QR 코드가 JSON 형식이 아님");
       }
     }
 
