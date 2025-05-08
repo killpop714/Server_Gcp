@@ -511,12 +511,23 @@
             else{
                 console.log("걍 아무것도 아님")
             }
+
+            if(index==2){
+                document.querySelectorAll(".check_li").forEach((i,j)=>{
+                    console.log(j);
+                    if(localStorage.getItem(`auth_${j}`)==="success"){
+                        const status = i.querySelector(".checking")
+                        if(status) status.textContent = "완료"
+                    }
+                })
+            }
             
         })
         .catch(e=>{
             console.log("fetch 실패:"+e)
         })
         }
+
         //랜덤 UUID기능
         function randUUID(){
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
@@ -585,11 +596,17 @@
         if (data.success) {
           clearInterval(interval);
           document.getElementById("viewpass").classList.remove("show");
+          successData(act_number)
           alert("✅ QR 인증 완료!");
         }
       });
   }, 2000); // 2초마다 체크
 }
+
+//체크 데이터 로드설정
+function successData(index){
+            localStorage.setItem(`auth_${index}`,"success")
+        }
 
     //메세지 전달 기능
     async function sendMessage() {

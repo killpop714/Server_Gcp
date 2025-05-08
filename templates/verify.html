@@ -7,6 +7,11 @@
 </head>
 <body>
     <script>
+      //체크 데이터 로드설정
+      function successData(index){
+            localStorage.setItem(`auth_${index}`,"success")
+        }
+
         const q = new URLSearchParams(location.search);
         const token = localStorage.getItem("jwt");
         
