@@ -85,7 +85,7 @@ def verify():
 #기본 사이트
 @app.route('/')
 def home():
-	return render_template("page.html")
+	return render_template("animation.html")
 
 if __name__ == "__main__":
 	app.run("0.0.0.0",port=5000)
