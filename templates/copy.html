@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CF - 컬처테크와 융합콘텐츠 기획</title>
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* 상단 고정 버튼 스타일 */
+        .navbar {
+            display: flex;
+            position: fixed;
+            height: 50px;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px,30px;
+            width: calc(100% - 20%);
+             top: 0;
+            right: 0;
+            z-index: 100;
+	    justify-content: space-between;
+            transition: width 0.3s ease-in-out;
+        }
+	.share{
+            width: 75px;
+            height: 24px;
+            padding: 0 0px;
+            margin-right: 10px;
+            color: white;
+            background: linear-gradient(45deg, rgba(131, 58, 180, 0.8), rgba(253, 29, 29, 0.8), rgba(252, 176, 69, 0.8));
+            border: none;
+            border-radius: 15px;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+        }
+        .share:hover{
+            background: linear-gradient(45deg, rgba(131, 58, 180, 0.55), rgba(253, 29, 29, 0.55), rgba(252, 176, 69, 0.55));
+            transform: scale(1.05); /* 살짝 확대되는 효과 */
+        }
+
+        .sidebar{
+            position: fixed;
+            left: 0;
+             top: 0;
+            width: 20%;
+            height: 100vh;
+             background:  #f0f0f0;
+            padding-top: 20px;
+            transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+        }
+
+        .sidebar.sidehidden{
+            transform: translateX(-100%);
+        }
+        .sidebar.Open{
+            transform: translateX(0%);
+        }
+
+
+        .sidebar ul{
+            display: block;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color:  black;
+            text-decoration: none;
+            transition: 0,3s;
+        }
+
+        .ulist{
+            font-weight: bold;
+        }
+
+        .sidebar li a{
+            display: block;
+            width: 100%;
+
+            padding:  5px 2px;
+            text-align: left;
+            font-size: 15px;
+            color:  black;
+            text-decoration: none;
+            background-size: 30px 40px;
+            transition: 0.2s;
+        }
+
+        .sidebar li a:hover{
+            background: #ddd;
+        }
+
+        .logo{
+            display: block;
+            width: 10px;
+            height: 10px;
+            top: 0;
+            left: 0;
+
+        }
+
+        .left-nav{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+        }
+
+        
+        .closebtn{
+            display: flex;
+            border: none;
+            align-items: center;
+            background: #f0f0f0;
+            padding: 5px 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+        .openbtn{
+            display: none;
+            border: none;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.01);
+            margin: 0px 10px;
+            padding: 5px 5px;
+
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px;
+        }
+
+        .closebtn img, .openbtn img{
+            width: 20px;
+            height: 20px;
+        }
+
+
+
+        .closebtn:hover, .openbtn:hover{
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        
+        
+
+        /* 컨텐츠 영역 */
+        .container {
+            display: block;
+            position: absolute;
+            right:  0;
+            width: calc(100% - 20%);
+            margin-top: 80px; /* 네비게이션 아래로 내림 */
+            padding: 20px;
+            max-height: 100vh;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            opacity: 1;
+            transition: opacity 1s ease-in-out;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 1), rgba(0, 0, 0, 0.03));
+            transition: width 0.3s ease-in-out;
+            transition: transform 0.5s ease-in-out opacity 0.5s ease-in-out;
+    
+        }
+
+        .container.active{
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .line{
+            width: 100%;
+            height: 1px;
+            align-items: center;
+            background: rgba(0,0,0, 0.4);
+            margin: 10px 0;
+        }
+
+
+        .thumbnail {
+            width: 320px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .video{
+            width: 50%;
+            max-width: 500px;
+            height: 30%;
+            max-height: 300px;
+        }
+
+
+
+
+        /*영상팝업 기능*/
+
+        .tumbain{
+            width: 320px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .modal{
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal_content{
+            position: relative;
+            padding: 0;
+            width: 100%;
+            max-width: 680px;
+            height: 100%;
+            max-height: 400px;
+        }
+
+        .close{
+            position: absolute;
+            top: -5px;
+            right: 5px;
+            color:white;
+            font-size: 20px;
+            z-index: 1;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .video{
+            display: flex;
+            width: 100%;
+            max-width: 680px;
+            height: 100%;
+            max-height: 400px;
+        }
+
+        @media (max-width:500px){
+            .close{
+                font-size: 15px;
+            }
+            .modal_content{
+            width: 100%;
+            max-width: 300px;
+            height: 100%;
+            max-height: 160px;
+            }
+            .video{
+            display: flex;
+            width: 100%;
+            max-width: 300px;
+            height: 100%;
+            max-height: 160px;
+            }    
+        }
+
+        /*인증CSS*/
+
+        .check{
+            display: flex;
+            flex-direction: column;
+            width: 50px;
+            height: 50px;
+            margin: 10px 0;
+            margin-right: 10px;
+            margin-left: 10px;
+            padding: 2px 2px;
+            transform: scale(1);
+            
+            transition: transform 0.5s ease-in-out, background 0.5s ease-in-out;
+        }
+        li {
+            display: flex;
+            align-items:center;
+        }
+
+        .check:hover{
+            background: rgba(0, 0, 0, 0.15);
+            transform: scale(1.2);
+        }
+
+        /*패스워드 팝*/
+        .passpop{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .passpop.show{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+       
+        /*채팅 메신저 CSS*/
+        #inputWrapper{
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px 0;
+            background: #fff;
+            border-top: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+        }
+        #inputarea{
+           display: flex;
+           align-items: center;
+            width: 100%;
+            max-width: 600px;
+            padding:  0 10px;
+        }
+        #messageInput{
+            z-index: 0;
+            flex: 1;
+            resize: none;
+            width: 600px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16.4px;
+            height: 60px;
+        }
+        #messageButton{
+            z-index: 2;
+            padding: 0 20px;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        #messageList{
+            flex: 1;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 20px;
+            overflow-y: auto;
+            background:  #fff;
+            border-top: 1px solid #ddd;
+        }
+        
+    </style>
+    <script src="https://unpkg.com/lottie-web"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="left-nav"><button class="openbtn" id="btn1" onclick="Openside()">
+            <img src="static/icon.jpg" alt="none">
+        </button>
+        <img class="logo" src="static/icon.jpg" alt="로고">
+        </div>
+        <span>My web</span>
+	<a href="https://www.instagram.com/" class="share">공유하기</a>
+   </nav>
+
+   
+
+   <div class="sidebar" id="sidebar">
+        <button  class="closebtn" onclick="Closeside()">
+            <img src="static/icon.jpg" alt="none">
+        </button>
+        <div class="line"></div>
+        <ul>
+            <p class="ulist">홈</p>
+            <li><a href="#">소개</a></li>
+            <li><a href="#">영상</a></li>
+        </ul>
+
+        <ul>
+            <p class="ulist">이벤트</p>
+            <li><a href="#">룰렛</a></li>
+            
+        </ul>
+
+        <ul>
+            <p class="ulist">채팅</p>
+            <li><a oncl>방명록</a></li>
+        </ul>
+   </div>
+
+   <div class="passpop" id="viewpass">
+        <div id="qrcode"></div>
+        <button onclick="closeQr()">닫기</button>
+   </div>
+
+   <div class="container" id ="container">
+    <p>여기에 내용이 표시됩니다.</p>
+     <div class="line"></div>
+   </div>
+
+   
+   <script>
+        const $side = document.getElementById("sidebar");
+        const $navbar =document.getElementById("navbar");
+        const $container = document.getElementById("container")
+        const $btn = document.getElementById("btn1")
+        const container = document.querySelector(".container")
+
+        let baseURL = window.location.origin;
+
+
+
+        let act_number =0 
+
+        //사이드용 함수
+        function Closeside(){
+                $side.classList.remove("Open")
+                $side.classList.toggle("sidehidden")
+                $btn.style.display="block"
+                $navbar.style.width = "100%"
+                $container.style.width = "100%"
+        }
+        function Openside(){
+                $side.classList.remove("sidehidden")
+                $side.classList.toggle("Open")
+                $btn.style.display="none"
+                $navbar.style.width = "calc(100% - 20%)"     
+                $container.style.width = "calc(100% - 20%)" 
+        }
+
+
+        //로컬 파일에 없을시 랜덤으로 UUID생성후 로컬에 저장
+        if(!localStorage.getItem("user_id")){
+            const uuid = randUUID();
+            localStorage.setItem("user_id",uuid)
+        }
+        
+        // function localact(){
+        //     fetch('/localact',{
+        //     method: "POST",
+        //     headers: {"Content-Type":"application/json"},
+        //     body: JSON.stringify({
+        //         user_id:localStorage.getItem("user_id"),
+        //         act:act[act_number],
+        //         password:document.getElementById("localpassword").value
+        //     })
+        //     })
+        //     .then(res => res.json())
+        //     .then(data=>{
+        //         if(data.success)
+        //             console.log("성공 대슈와")
+        //         else{
+        //             alert("비밀번호가 틀렸다")
+        //         }
+        //     })
+        //     .catch(e=>{
+        //         console.log("fetch 실패:"+e)
+        //     })
+        // }
+
+
+
+        //static 경로에 로드
+
+
+        function sideload(index){
+            fetch('/static/data.json')
+        .then(res => res.json())
+        .then(data=>{
+            document.getElementById("container").innerHTML = data[index].skript
+            if(index==3){
+                loadMessages();
+                console.log("메세지 작동")
+                
+            }
+            else{
+                console.log("걍 아무것도 아님")
+            }
+
+            if(index==2){
+                document.querySelectorAll(".check_li").forEach((i,j)=>{
+                    console.log(j);
+                    if(localStorage.getItem(`auth_${j}`)==="success"){
+                        const status = i.querySelector(".checking")
+                        if(status) status.textContent = "완료"
+                    }
+                })
+            }
+            
+        })
+        .catch(e=>{
+            console.log("fetch 실패:"+e)
+        })
+        }
+
+        //랜덤 UUID기능
+        function randUUID(){
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+                var r = Math.random() * 16 | 0,
+                    v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16)
+            })
+        }
+
+        //비디오 기능
+        function openModal(){
+            document.getElementById('viewModal').classList.toggle("show")
+            document.getElementById('video').play()
+
+        }function closeModal(){
+            document.getElementById('viewModal').classList.remove("show")
+            document.getElementById('video').pause()
+            document.getElementById('video').currentTime=0
+        }
+        
+         //버튼 클릭 이벤트
+         document.querySelectorAll(".sidebar a").forEach((i,index)=>{
+            i.addEventListener("click",()=>{
+                sideload(index)
+            })
+        })
+
+        //체크 클릭 이벤트
+        document.addEventListener("click", (e) => {
+        if (e.target.classList.contains("check")) {
+            document.getElementById("viewpass").classList.toggle("show");
+	    const items = Array.from(document.querySelectorAll(".check"))
+	    act_number = items.indexOf(e.target)
+	    console.log(act_number)
+
+        
+
+
+        document.getElementById("qrcode").innerHTML =""
+        const user_id = localStorage.getItem("user_id") || "unknown"
+        
+        startPolling(user_id,act_number)
+        
+        const qrData = `${baseURL}/verify?user_id=${encodeURIComponent(user_id)}&index=${act_number}`
+
+        new QRCode(document.getElementById("qrcode"), {
+        text: qrData,
+        width: 256,
+        height: 256
+      });
+    }
+});
+    //체크 닫기 기능
+    function closeQr(){
+        document.getElementById("viewpass").classList.remove("show");
+        clearInterval(interval);
+    }
+
+    //qr 인증 확인
+    let interval = null
+    function startPolling(user_id, act_number) {
+            interval = setInterval(() => {
+    fetch(`/check_status?user_id=${encodeURIComponent(user_id)}&act=${act_number}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          clearInterval(interval);
+          document.getElementById("viewpass").classList.remove("show");
+          successData(act_number)
+          sideload(2)
+          alert("✅ QR 인증 완료!");
+        }
+      });
+  }, 2000); // 2초마다 체크
+}
+
+//체크 데이터 로드설정
+function successData(index){
+            localStorage.setItem(`auth_${index}`,"success")
+        }
+
+    //메세지 전달 기능
+    async function sendMessage() {
+            const msg = document.getElementById('messageInput').value;
+            await fetch('/post_message', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: '익명', text: msg}),
+                            
+            });
+            loadMessages();
+            document.getElementById('messageInput').value =""
+        }
+      
+        async function loadMessages() {
+            const res = await fetch('/get_messages');
+            const data = await res.json();
+            const box = document.getElementById('messageList');
+            box.innerHTML = '';
+            data.forEach(item => {
+                const p = document.createElement('p');
+                p.textContent = `[${item.username}] ${item.text}`;
+                box.appendChild(p);
+            });
+        }
+
+    //애니메이션 스크립트
+    function StartAnimation(){
+        lottie.loadAnimation({
+        container: document.getElementById('lottie'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: true,
+        path: 'static/gacha.json'
+        })
+    }
+    </script>
+
+<script>
+    function login() {
+        if(!localStorage.getItem("jwt")){
+            fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password: document.getElementById("pw").value })
+            })
+            .then(r => r.json())
+            .then(r => {
+            if (r.token) localStorage.setItem("jwt", r.token);
+            });
+        }
+        else{
+            console.log("이미 토큰이 있는 것을 확인하였습니다")
+        }
+    }
+    </script>
+    
+</body>
+</html>

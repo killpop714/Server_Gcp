@@ -369,6 +369,7 @@
         }
         
     </style>
+    <script src="https://unpkg.com/lottie-web"></script>
 </head>
 <body>
     <nav class="navbar" id="navbar">
@@ -395,19 +396,14 @@
         </ul>
 
         <ul>
-            <p class="ulist">활동 인증</p>
-            <li><a href="#">인증</a></li>
+            <p class="ulist">이벤트</p>
+            <li><a href="#">룰렛</a></li>
             
         </ul>
 
         <ul>
-            <p class="ulist">팀</p>
-            <li><a oncl>피드백</a></li>
-        </ul>
-
-        <ul>
-            <p class="ulist">관리</p>
-            <li><a oncl>로그인</a></li>
+            <p class="ulist">채팅</p>
+            <li><a oncl>방명록</a></li>
         </ul>
    </div>
 
@@ -421,7 +417,7 @@
      <div class="line"></div>
    </div>
 
-   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+   
    <script>
         const $side = document.getElementById("sidebar");
         const $navbar =document.getElementById("navbar");
@@ -485,7 +481,7 @@
 
         //static 경로에 로드
 
-
+        //사이드 바 버튼 내용 불러오는 스크립트
         function sideload(index){
             fetch('/static/data.json')
         .then(res => res.json())
@@ -501,13 +497,7 @@
             }
 
             if(index==2){
-                document.querySelectorAll(".check_li").forEach((i,j)=>{
-                    console.log(j);
-                    if(localStorage.getItem(`auth_${j}`)==="success"){
-                        const status = i.querySelector(".checking")
-                        if(status) status.textContent = "완료"
-                    }
-                })
+                StartAnimation()
             }
             
         })
@@ -543,60 +533,6 @@
             })
         })
 
-        //체크 클릭 이벤트
-        document.addEventListener("click", (e) => {
-        if (e.target.classList.contains("check")) {
-            document.getElementById("viewpass").classList.toggle("show");
-	    const items = Array.from(document.querySelectorAll(".check"))
-	    act_number = items.indexOf(e.target)
-	    console.log(act_number)
-
-        
-
-
-        document.getElementById("qrcode").innerHTML =""
-        const user_id = localStorage.getItem("user_id") || "unknown"
-        
-        startPolling(user_id,act_number)
-        
-        const qrData = `${baseURL}/verify?user_id=${encodeURIComponent(user_id)}&index=${act_number}`
-
-        new QRCode(document.getElementById("qrcode"), {
-        text: qrData,
-        width: 256,
-        height: 256
-      });
-    }
-});
-    //체크 닫기 기능
-    function closeQr(){
-        document.getElementById("viewpass").classList.remove("show");
-        clearInterval(interval);
-    }
-
-    //qr 인증 확인
-    let interval = null
-    function startPolling(user_id, act_number) {
-            interval = setInterval(() => {
-    fetch(`/check_status?user_id=${encodeURIComponent(user_id)}&act=${act_number}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          clearInterval(interval);
-          document.getElementById("viewpass").classList.remove("show");
-          successData(act_number)
-          sideload(2)
-          alert("✅ QR 인증 완료!");
-        }
-      });
-  }, 2000); // 2초마다 체크
-}
-
-//체크 데이터 로드설정
-function successData(index){
-            localStorage.setItem(`auth_${index}`,"success")
-        }
-
     //메세지 전달 기능
     async function sendMessage() {
             const msg = document.getElementById('messageInput').value;
@@ -621,27 +557,17 @@ function successData(index){
                 box.appendChild(p);
             });
         }
-   </script>
 
-<script>
-    function login() {
-        if(!localStorage.getItem("jwt")){
-            fetch("/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ password: document.getElementById("pw").value })
-            })
-            .then(r => r.json())
-            .then(r => {
-            if (r.token) localStorage.setItem("jwt", r.token);
-            });
-        }
-        else{
-            console.log("이미 토큰이 있는 것을 확인하였습니다")
-        }
+    //애니메이션 스크립트
+    function StartAnimation(){
+        lottie.loadAnimation({
+        container: document.getElementById('lottie'),
+        renderer: 'svg',
+        loop: false,
+        autoplay: true,
+        path: 'static/gacha.json'
+        })
     }
     </script>
-
-    
 </body>
 </html>
