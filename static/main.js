@@ -1,4 +1,4 @@
-import * as THREE from 'https://cdn.skypack.dev/three';
+import * as THREE from 'https://unpkg.com/three@0.153.0/build/three.module.js';
 
 let scene, camera, renderer, card;
 let lifted = false, revealed = false;
