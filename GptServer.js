@@ -17,7 +17,7 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/chat',async(req,res)=>{
-    const message = req.body;
+    const message = req.body.message;
     console.log(`인지한 데이터: ${message}`)
     try {
         const response = await axios.post(
