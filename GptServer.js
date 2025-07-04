@@ -26,7 +26,7 @@ app.post('/chat',async(req,res)=>{
                 model: 'gpt-4o',
                 messages: [
                     { role: 'system', content: '너는 주변 환경을 인지하고 행동하는 NPC야.' },
-                    { role: 'user', content: `주변에서 이런 걸 들었어: "${perception}". 어떤 생각이 들어?` }
+                    { role: 'user', content: `주변에서 이런 걸 들었어: "${message}". 어떤 생각이 들어?` }
                 ]
             },
             {
